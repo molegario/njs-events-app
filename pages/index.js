@@ -1,5 +1,12 @@
+// import EventItem from "../components/event-item";
+import EventsList from "../components/events/events-list";
+import { getFeatureEvents } from "../dummy-data";
+
 export default function AppRoot() {
+
+  const featuredEvents = getFeatureEvents();
+
   return <div>
-    <h1>App ROOT</h1>
+    <EventsList events={featuredEvents}/>
   </div>;
 }
