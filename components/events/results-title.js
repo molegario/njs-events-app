@@ -2,7 +2,7 @@ import LinkButton from '../ui/button';
 import classes from './results-title.module.css';
 
 export default function ResultsTitle({ date }) {
-  const humanReadableDate = new Date().toLocaleDateString('en-CA', {
+  const humanReadableDate = new Date(date).toLocaleDateString('en-CA', {
     month: 'long',
     year: 'numeric'
   })

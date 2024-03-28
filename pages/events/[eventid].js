@@ -1,17 +1,12 @@
-import { useRouter } from "next/router";
-import { getEventById } from "../../dummy-data";
 import { Fragment } from "react";
 import EventSummary from "../../components/event-detail/event-summary";
 import EventLogistics from "../../components/event-detail/event-logistics";
 import EventContent from "../../components/event-detail/event-content";
 import ErrorAlert from "../../components/events/error-alert";
 import LinkButton from "../../components/ui/button";
-export default function EventDetailsPage() {
-  const {
-    query,
-  } = useRouter();
-  const {eventid} = query;
-  const eventDetails = getEventById(eventid);
+import { fetchEvents, fetchOneEvent } from "../../helpers/api-util";
+
+export default function EventDetailsPage({ eventDetails }) {
 
   if(!eventDetails) {
     return <Fragment>
@@ -36,4 +31,34 @@ export default function EventDetailsPage() {
       <p>{eventDetails.description}</p>
     </EventContent>
   </Fragment>;
+}
+
+export async function getStaticPaths() {
+  const xFormedResp = await fetchEvents();
+  return {
+    paths: xFormedResp.filter(xx=>xx.isFeatured).map(gg=>({
+      params: {
+        eventid: gg.id
+      }
+    })),
+    fallback: true // false falls back to [..slug] -> events
+  };
+}
+
+export async function getStaticProps(context) {
+  const { params } = context;
+  const xFormedResp = await fetchOneEvent(params.eventid);
+  
+  // if(!xFormedResp[0]) {
+  //   return {
+  //     notFound: true
+  //   };
+  // }
+
+  return {
+    props: {
+      eventDetails: xFormedResp[0] ?? null
+    },
+    revalidate: 10,
+  };
 }

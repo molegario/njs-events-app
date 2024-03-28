@@ -18,7 +18,7 @@ export default function EventLogistics({
 
   return <section className={classes.logistics}>
     <div className={classes.image}>
-      <img src={`/${image}`} alt={imageAlt} />
+      <img src={`https://olegario-nextjs-projects-bucket.s3.ca-central-1.amazonaws.com/${image}`} alt={imageAlt} />
     </div>
     <ul className={classes.list}>
       <LogisticsItem icon={DateIcon}>

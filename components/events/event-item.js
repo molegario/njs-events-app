@@ -16,7 +16,7 @@ export default function EventItem({ title, image, date, location, id }) {
   const exploreLink = `/events/${id}`;
 
   return <li className={classes.item}>
-    <img src={'/' + image} alt="" />
+    <img src={`https://olegario-nextjs-projects-bucket.s3.ca-central-1.amazonaws.com/${image}`} alt="" />
     <div className={classes.content}>
       <div className={classes.summary}>
         <h2>{title}</h2>
