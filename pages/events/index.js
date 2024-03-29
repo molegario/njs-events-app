@@ -3,6 +3,7 @@ import EventsList from "../../components/events/events-list";
 import EventsSearch from "../../components/events/events-search";
 import { useRouter } from "next/router";
 import { fetchEvents } from "../../helpers/api-util";
+import Head from "next/head";
 
 const onlyUnique = (value, index, array) => {
   return array.indexOf(value) === index;
@@ -31,6 +32,10 @@ export default function EventsPage({ allEvents, allValidYears, allValidMonths })
   }
 
   return <Fragment>
+    <Head>
+      <title>ALL EVENTS</title>
+      <meta name="description" content="Find alot of community in our company events."/>
+    </Head>
     <EventsSearch 
       onSearchSubmit={findEventsHandler} 
       allValidYears={allValidYears} 

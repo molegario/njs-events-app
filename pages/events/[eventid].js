@@ -5,6 +5,7 @@ import EventContent from "../../components/event-detail/event-content";
 import ErrorAlert from "../../components/events/error-alert";
 import LinkButton from "../../components/ui/button";
 import { fetchEvents, fetchOneEvent } from "../../helpers/api-util";
+import Head from "next/head";
 
 export default function EventDetailsPage({ eventDetails }) {
 
@@ -20,6 +21,10 @@ export default function EventDetailsPage({ eventDetails }) {
   }
 
   return <Fragment>
+    <Head>
+      <title>{eventDetails.title}</title>
+      <meta name="description" content={eventDetails.description}/>
+    </Head>
     <EventSummary title={eventDetails.title} />
     <EventLogistics 
       date={eventDetails.date}

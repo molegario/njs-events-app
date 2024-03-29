@@ -3,9 +3,9 @@ import EventsList from "../../components/events/events-list";
 import ResultsTitle from "../../components/events/results-title";
 import ErrorAlert from "../../components/events/error-alert";
 import LinkButton from "../../components/ui/button";
-// import { fetchEvents } from "../../helpers/api-util";
 import useSWR from "swr";
 import { useRouter } from "next/router";
+import Head from "next/head";
 
 export default function FilteredEventsPage({}) {
   const router = useRouter();
@@ -18,6 +18,27 @@ export default function FilteredEventsPage({}) {
     'https://olegario-njs-fetching-default-rtdb.firebaseio.com/events.json',
     (url) => fetch(url).then(res => res.json())
   );
+
+  function getReadableDate(filterData) {
+    const numYear = +filterData?.[0];
+    const numMonth = +filterData?.[1];
+    const FilterDateString = `${numYear}/${('00' + numMonth).slice(-2)}/01`;
+
+    return  new Date(FilterDateString).toLocaleDateString('en-CA', {
+      month: 'long',
+      year: 'numeric'
+    });
+  }
+
+  const numYear = +filterData?.[0];
+  const numMonth = +filterData?.[1];
+
+  function pageHead(filterData, invalid) {
+    return <Head>
+      <title>{invalid ? 'Events for a specific month - invalid range' : `Events in ${getReadableDate(filterData)}`}</title>
+      <meta name="description" content={invalid ? `An invalid date range was requested - no events found` : `Browse all our events for the month of ${getReadableDate(filterData)}`}/>
+    </Head>;
+  }
 
   useEffect(
     () => {
@@ -36,11 +57,11 @@ export default function FilteredEventsPage({}) {
   );
 
   if(!filterData) {
-    return <p className="center">Loading...</p>;
+    return <Fragment>
+      { pageHead(filterData) }
+      <p className="center">Loading...</p>
+    </Fragment>;
   }
-
-  const numYear = +filterData?.[0];
-  const numMonth = +filterData?.[1];
 
   if(
     isNaN(numYear) ||
@@ -52,6 +73,7 @@ export default function FilteredEventsPage({}) {
     error
   ) {
     return <Fragment>
+      { pageHead(filterData, true) } 
       <ErrorAlert>
         <p>Filters are invalid.  Please re-adjust your selection.</p>
       </ErrorAlert>
@@ -69,6 +91,7 @@ export default function FilteredEventsPage({}) {
   );
 
   return <Fragment>
+    { pageHead(filterData) }
     <ResultsTitle date={`${numYear}/${('00' + numMonth).slice(-2)}/01`}/>
     <EventsList events={filteredEvents} />
   </Fragment>;
