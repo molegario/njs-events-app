@@ -6,6 +6,7 @@ import ErrorAlert from "../../components/events/error-alert";
 import LinkButton from "../../components/ui/button";
 import { fetchEvents, fetchOneEvent } from "../../helpers/api-util";
 import Head from "next/head";
+import Comments from "../../components/input/comments";
 
 export default function EventDetailsPage({ eventDetails }) {
 
@@ -35,6 +36,7 @@ export default function EventDetailsPage({ eventDetails }) {
     <EventContent>
       <p>{eventDetails.description}</p>
     </EventContent>
+    <Comments eventId={eventDetails.id} />
   </Fragment>;
 }
 
