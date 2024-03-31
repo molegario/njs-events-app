@@ -3,7 +3,7 @@ import EventSummary from "../../components/event-detail/event-summary";
 import EventLogistics from "../../components/event-detail/event-logistics";
 import EventContent from "../../components/event-detail/event-content";
 import ErrorAlert from "../../components/events/error-alert";
-import LinkButton from "../../components/ui/button";
+import LinkButton from "../../components/ui/button/button";
 import { fetchEvents, fetchOneEvent } from "../../helpers/api-util";
 import Head from "next/head";
 import Comments from "../../components/input/comments";
@@ -56,12 +56,6 @@ export async function getStaticProps(context) {
   const { params } = context;
   const xFormedResp = await fetchOneEvent(params.eventid);
   
-  // if(!xFormedResp[0]) {
-  //   return {
-  //     notFound: true
-  //   };
-  // }
-
   return {
     props: {
       eventDetails: xFormedResp[0] ?? null

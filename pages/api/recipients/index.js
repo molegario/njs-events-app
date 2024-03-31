@@ -1,4 +1,6 @@
-export default function handler(req, res) {
+import { connectToDB, insertDocumentToCollection } from '../../../helpers/db-util';
+
+export default async function handler(req, res) {
   if(
     req.method === 'POST'
   ) {
@@ -6,12 +8,38 @@ export default function handler(req, res) {
       email,
     } = req.body;
 
-    console.log('NEW RECIPIENT::TO BE REGISTERED', email);
-
     if(!email || !email.includes('@')) {
       res.status(422).json({
         message: 'Invalid email address.'
       });
+      return;
+    }
+
+    let client;
+
+    try {
+      client = await connectToDB('recipients');
+    } catch(err) {
+      res.status(500).json({
+        message: 'Could not connect to DB'
+      });
+      return;
+    }
+
+    try {
+      await insertDocumentToCollection(
+        client,
+        'emails',
+        {
+          email
+        }
+      );
+      client.close(); //if there was a client to close close it
+    } catch(err) {
+      res.status(500).json({
+        message: 'Could not insert new recipient to DB'
+      });
+      client.close(); //if there was a client to close close it - ??
       return;
     }
 

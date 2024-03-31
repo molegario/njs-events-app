@@ -6,6 +6,12 @@ export default function NewComment({ onAddComment }) {
   const nameRef = useRef();
   const commentRef = useRef();
 
+  function resetForm() {
+    emailRef.current.value = '';
+    nameRef.current.value = '';
+    commentRef.current.value = '';
+  }
+
   function sendCommentHandler(evt) {
     evt.preventDefault();
 
@@ -31,6 +37,9 @@ export default function NewComment({ onAddComment }) {
       name: enteredName,
       text: enteredComment,
     });
+
+    resetForm();
+    resetInvalid();
   }
 
   function resetInvalid() {

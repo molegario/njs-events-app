@@ -1,4 +1,6 @@
-export default function handler(req, res) {
+import { connectToDB, getAllDocumentsFromCollection, insertDocumentToCollection } from '../../../../../helpers/db-util';
+
+export default async function handler(req, res) {
   if(
     req.method === 'POST'
   ) {
@@ -7,10 +9,7 @@ export default function handler(req, res) {
       name,
       text
     } = req.body;
-
     const {eventid} = req.query;
-
-    console.log('NEW COMMENT::', email, name, text, eventid);
 
     //VALIDATION
     if(
@@ -25,51 +24,65 @@ export default function handler(req, res) {
     }
 
     const newComment = {
-      id: new Date().toISOString(),
+      eventid,
       email,
       name,
       text,
     };
+    let client;
 
+    try {
+      client = await connectToDB('eventcomments');
+    } catch(err) {
+      res.status(500).json({
+        message: 'Could not connect to DB'
+      });
+      return;
+    }
+    
+    let resp;
+    try {
+      resp = await insertDocumentToCollection(client, 'comments');
+      client.close();
+    } catch(err) {
+      res.status(500).json({
+        message: 'Could not connect to DB'
+      });
+      client.close();
+      return;
+    }
     res.status(201).json({
       message: 'successfully inserted comment.',
+      insertedId: resp.insertedId,
       comment: newComment
     });
-
-
   } else if(req.method === 'GET') {
-    const { eventid } = req.query;
+    const { eventid } = req.query;  
+    let client;
+    try {
+      client = await connectToDB('eventcomments');
+    } catch(err) {
+      res.status(500).json({
+        message: 'Could not connect to DB'
+      });
+      return;
+    }
 
-
-
-
-    console.log(`COMMENTS::GET::EVENT::${eventid}`, eventid);
-
-
-
+    let eventcomments;
+    try {
+      eventcomments = await getAllDocumentsFromCollection(client, 'comments', { eventid });
+      client.close();
+    } catch(err) {
+      res.status(500).json({
+        message: 'Could not retrieve comments for event'
+      });
+      client.close();
+      return;
+    }
 
     res.status(200).json({
       eventid,
-      comments: [
-        {
-          id: 'c1',
-          email: 'me1@place.com',
-          name: 'Jay the dude',
-          text: 'comment 1 test comment phrase'
-        },
-        {
-          id: 'c2',
-          email: 'me222@place.com',
-          name: 'Mike the dude',
-          text: 'comment 2 test comment phrase'
-        },
-        {
-          id: 'c3',
-          email: 'me345@place.com',
-          name: 'Sam the dude',
-          text: 'comment 3 test comment phrase'
-        },
-      ]
+      comments: eventcomments
     })
 
   } else {
@@ -77,5 +90,4 @@ export default function handler(req, res) {
       message: 'no valid request to process.'
     })
   }
-
 }

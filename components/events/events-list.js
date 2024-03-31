@@ -1,4 +1,4 @@
-import LinkButton from "../ui/button";
+import LinkButton from "../ui/button/button";
 import ErrorAlert from "./error-alert";
 import EventItem from "./event-item";
 

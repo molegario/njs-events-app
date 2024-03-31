@@ -1,15 +1,23 @@
 import axios from 'axios';
 import classes from './newsletter-registration.module.css';
-import { useRef, useState } from 'react';
+import { useContext, useRef, useState } from 'react';
+import NotificationContext from '../../store/notification-context';
 
 export default function NewsletterRegistration() {
+  const notificationCtx = useContext(NotificationContext);
   const [isInvalid, setIsInvalid] = useState(false);
   const emailRef = useRef();
 
   function registrationHandler(evt) {
     evt.preventDefault();
 
-    console.log("REGISTER::START::", emailRef.current.value);
+    // console.log("REGISTER::START::", emailRef.current.value);
+
+    notificationCtx.showNotification({
+      title: `Registering recipient`,
+      message: `Registering email ${emailRef.current.value}`,
+      status: 'pending'
+    });
 
     axios({
       method: 'post',
@@ -18,17 +26,22 @@ export default function NewsletterRegistration() {
         email: emailRef.current.value,
       }
     }).then(response=>{
-      console.log("NEW RECIPIENT REGISTERED.");
+      // console.log("NEW RECIPIENT REGISTERED.");
 
-
+      notificationCtx.showNotification({
+        title: `Registered recipient succeeded`,
+        message: `Registered email ${emailRef.current.value}`,
+        status: 'success'
+      });
+  
+      emailRef.current.value = '';
 
     }, err => {
-      console.log('REG::ERROR::', err);
-
-
-
-
-
+      notificationCtx.showNotification({
+        title: `Registered recipient failed`,
+        message: `Failed to register email ${emailRef.current.value}. Please try again later.`,
+        status: 'error'
+      });
     });
 
     const enteredEmail = emailRef.current.value;
