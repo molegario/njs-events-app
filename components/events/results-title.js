@@ -1,4 +1,4 @@
-import LinkButton from '../ui/button';
+import LinkButton from '../ui/button/button';
 import classes from './results-title.module.css';
 
 export default function ResultsTitle({ date }) {

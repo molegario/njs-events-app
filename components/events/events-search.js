@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import { getAllSelectableMonths, getAllSelectableYears } from "../../dummy-data";
-import LinkButton from "../ui/button";
+import LinkButton from "../ui/button/button";
 import classes from './events-search.module.css';
 
 export default function EventsSearch({

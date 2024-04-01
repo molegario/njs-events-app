@@ -42,7 +42,7 @@ export default async function handler(req, res) {
     
     let resp;
     try {
-      resp = await insertDocumentToCollection(client, 'comments');
+      resp = await insertDocumentToCollection(client, 'comments', newComment);
       client.close();
     } catch(err) {
       res.status(500).json({
@@ -51,6 +51,7 @@ export default async function handler(req, res) {
       client.close();
       return;
     }
+
     res.status(201).json({
       message: 'successfully inserted comment.',
       insertedId: resp.insertedId,

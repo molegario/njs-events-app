@@ -7,6 +7,7 @@ import LinkButton from "../../components/ui/button/button";
 import { fetchEvents, fetchOneEvent } from "../../helpers/api-util";
 import Head from "next/head";
 import Comments from "../../components/input/comments";
+import LoadingContext, { LoadingContextProvider } from "../../store/loading-context";
 
 export default function EventDetailsPage({ eventDetails }) {
 
@@ -36,7 +37,9 @@ export default function EventDetailsPage({ eventDetails }) {
     <EventContent>
       <p>{eventDetails.description}</p>
     </EventContent>
-    <Comments eventId={eventDetails.id} />
+    <LoadingContextProvider>
+      <Comments eventId={eventDetails.id} />
+    </LoadingContextProvider>
   </Fragment>;
 }
 

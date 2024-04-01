@@ -2,7 +2,7 @@ import { Fragment, useEffect, useState } from "react";
 import EventsList from "../../components/events/events-list";
 import ResultsTitle from "../../components/events/results-title";
 import ErrorAlert from "../../components/events/error-alert";
-import LinkButton from "../../components/ui/button";
+import LinkButton from "../../components/ui/button/button";
 import useSWR from "swr";
 import { useRouter } from "next/router";
 import Head from "next/head";

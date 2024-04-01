@@ -25,9 +25,15 @@ export default function NewsletterRegistration() {
       data: {
         email: emailRef.current.value,
       }
-    }).then(response=>{
-      // console.log("NEW RECIPIENT REGISTERED.");
-
+    }).then(
+      response=>{
+        if(response && response.status === 201 && response.statusText === 'Created') {
+          return response;
+        } else {
+          throw new Error(response.data.message || 'Failed to insert record')
+        }
+      }
+    ).then(response=>{
       notificationCtx.showNotification({
         title: `Registered recipient succeeded`,
         message: `Registered email ${emailRef.current.value}`,
@@ -39,7 +45,7 @@ export default function NewsletterRegistration() {
     }, err => {
       notificationCtx.showNotification({
         title: `Registered recipient failed`,
-        message: `Failed to register email ${emailRef.current.value}. Please try again later.`,
+        message: err.message ?? `Failed to register email ${emailRef.current.value}. Please try again later.`,
         status: 'error'
       });
     });
